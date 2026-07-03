@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { products } from '@/lib/data';
-import ProductOrderModule from '@/components/ProductOrderModule';
 
 export function generateStaticParams() {
   return products.map((product) => ({
@@ -149,9 +148,36 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
           <p className="text-text-muted mb-8 text-lg">{product.description}</p>
 
-          <ProductOrderModule product={product} />
-          
+          <div className="mb-8">
+            <h3 className="font-bold mb-3">Select Variant:</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {product.variants.map((v, i) => (
+                <button key={i} className={`p-4 rounded-xl border-2 text-left transition-all ${i === 0 ? 'border-accent-primary bg-bg-secondary' : 'border-border-soft hover:border-text-muted'}`}>
+                  <div className="font-bold">{v.name}</div>
+                  <div className="flex justify-between mt-1 text-sm">
+                    <span>${v.price.toFixed(2)}</span>
+                    {v.savings && <span className="text-success font-medium">{v.savings}</span>}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 mb-8">
+            <a href={`https://wa.me/1234567890?text=I'm%20interested%20in%20ordering%20${product.name}`} target="_blank" rel="noreferrer" className="w-full bg-[#25D366] text-white text-center px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+              <span>💬</span> Order via WhatsApp
+            </a>
+            <a href={`mailto:sales@buyretat.com?subject=Order Inquiry: ${product.name}`} className="w-full bg-btn-primary text-white text-center px-6 py-4 rounded-xl font-bold hover:opacity-90 transition-opacity">
+              Order via Email
+            </a>
+          </div>
+
           <div className="space-y-4">
+            <div className="border-l-4 border-btn-primary bg-bg-secondary p-4 rounded-r-lg">
+              <h4 className="font-bold mb-1">How Ordering Works</h4>
+              <p className="text-sm text-text-muted">Message us with your desired variant. We will confirm stock and send secure payment details (Bank Transfer/Crypto). Shipped within 24h of payment.</p>
+            </div>
+            
             <div className="border-l-4 border-red-500 bg-red-50 p-4 rounded-r-lg">
               <h4 className="font-bold text-red-700 mb-1">Safety Protocol</h4>
               <p className="text-sm text-red-600">Strictly for in-vitro laboratory research only. Not for human or animal consumption. Buyers must be qualified researchers.</p>
